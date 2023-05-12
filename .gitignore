@@ -4,6 +4,7 @@
 /node_modules
 .idea
 .git
+/dist
 
 # debug
 npm-debug.log*
