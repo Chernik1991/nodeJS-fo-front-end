@@ -1,5 +1,5 @@
 import express, {Request, Response} from 'express';
-import {productsRepository} from '../repositories/products-repository';
+import {productsRepository, productType} from '../repositories/products-repository';
 import {body} from 'express-validator';
 import {inputValidationMiddleware} from '../middlewares/input-validation-middleware';
 
@@ -7,16 +7,17 @@ const titleValidation= body('title').trim().isLength({min: 1, max: 10}).withMess
 export const productsRouter = express.Router({})
 
 
-productsRouter.get('/', (req: Request, res: Response) => {
+productsRouter.get('/', async (req: Request, res: Response) => {
 
-    const foundProducts = productsRepository.findProduct(req.query.title?.toString())
+    const foundProducts:productType[] = await productsRepository.findProduct(req.query.title?.toString())
+
     res.send(foundProducts)
 })
 productsRouter.post('/',
     titleValidation,
     inputValidationMiddleware,
-    (req: Request, res: Response) => {
-        const newProduct = productsRepository.createProduct(req.body.title)
+    async (req: Request, res: Response) => {
+        const newProduct = await productsRepository.createProduct(req.body.title)
         res.status(201).send(newProduct)
     })
 productsRouter.get('/:id',
@@ -29,10 +30,10 @@ productsRouter.get('/:id',
         res.send(404)
     }
 })
-productsRouter.put('/:id', (req: Request, res: Response) => {
-    const isUpdated = productsRepository.updateProduct(+req.params.id, req.body.title)
+productsRouter.put('/:id', async (req: Request, res: Response) => {
+    const isUpdated = await productsRepository.updateProduct(+req.params.id, req.body.title)
     if (isUpdated) {
-        const product = productsRepository.getProductById(+req.params.id)
+        const product = await productsRepository.getProductById(+req.params.id)
         res.send(product)
     } else {
         res.send(404)
