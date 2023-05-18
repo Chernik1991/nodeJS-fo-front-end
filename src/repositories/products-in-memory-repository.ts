@@ -1,7 +1,5 @@
-export type productType={
-    id:number,
-    title:string
-}
+import {productType} from "./db";
+
 const products = [{id: 1, title: 'tomato'}, {id: 2, title: 'orange'}]
 
 export const productsRepository = {
@@ -33,7 +31,7 @@ export const productsRepository = {
             return false
         }
     },
-    deleteProduct(id: number) {
+    async deleteProduct(id: number) {
         for (let i = 0; i < products.length; i++) {
             if (products[i].id === id) {
                 products.splice(i, 1)
