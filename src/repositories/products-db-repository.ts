@@ -1,5 +1,5 @@
 import {productCollection, productType} from "./db";
-
+import {ProductType} from "../domain/products-service";
 
 export const productsRepository = {
     async findProduct(title: string | null | undefined): Promise<productType[]> {
@@ -9,11 +9,7 @@ export const productsRepository = {
         }
         return productCollection.find({}).toArray()
     },
-    async createProduct(title: string) {
-        const newProduct = {
-            id: +(new Date()),
-            title
-        }
+    async createProduct(newProduct:ProductType) {
         await productCollection.insertOne(newProduct)
         return newProduct
     },
